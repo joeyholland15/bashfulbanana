@@ -51,12 +51,14 @@ var FinanceContainer = React.createClass({
       contentType: 'application/json',
       success: function(data) {
         console.log('POST DATA', data);
+        //call 
         this.loadBills();
       }.bind(this)
     });
   },
 
   addPayment: function(payment) {
+    var billId = 
     $.ajax({
       url: 'http://localhost:8080/payment',
       type: 'POST',
@@ -161,8 +163,8 @@ var BillForm = React.createClass({
     this.refs.billForm.reset();
   },
 
-  createPayments: function(event) {
-    event.preventDefault();
+  createPayments: function(billId) {
+    //event.preventDefault();
     var users = this.props.users;
     //iterate through users
     for(var i = 0; i < users.length; i++) {
@@ -170,7 +172,7 @@ var BillForm = React.createClass({
       if(users[i].selected === true) {
         //create payment object
         var payment = {
-          billId: 1, //need to figure this out
+          billId: billId, //need to figure this out
           userId: users[i].id,
           amount: users[i].total
         }
