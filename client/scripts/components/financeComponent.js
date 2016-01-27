@@ -115,20 +115,27 @@ var FinanceContainer = React.createClass({
           <h4 className="text-center">History</h4>
           {historyList}
         </div>
-        <BillForm addPayment={this.addPayment} addBill={this.addBill} users={this.state.users}/>
+        <BillForm getUsers={this.getUsers} addPayment={this.addPayment} addBill={this.addBill} users={this.state.users}/>
       </div>
     )
   }
 });
 
 var BillForm = React.createClass({
-  splitEvenly: function() {
+  splitEvenly: function(event) {
+    event.preventDefault();
     //access this.refs.amount.value
-    var total = this.refs.amount.value;
+    var amount = this.refs.total.value;
     //divide total by number of roommates 
-    var costPerUser = total/this.props.user.length; 
-    //return the cost per user
-    return costPerUser; 
+    var costPerUser = amount/this.props.users.length; 
+    //iterate through users
+    for(var i = 0; i < this.props.users.length; i++) {
+      //set the user total to costPerUser
+      this.props.users[i].total = costPerUser;
+      //invert selected property
+      this.props.users[i].selected = true;
+    };
+    console.log('USERS', this.props.users);
   },
 
   createBill: function(event) {
@@ -166,11 +173,12 @@ var BillForm = React.createClass({
           userId: users[i].id,
           amount: users[i].total
         }
+        console.log('PAYMENT', payment); 
         this.props.addPayment(payment);
-        console.log(users[i]);
-        console.log('PAYMENT', payment)
       }
     }
+    this.refs.billForm.reset();
+    this.props.getUsers(); 
   },
 
   render: function() {
@@ -187,7 +195,7 @@ var BillForm = React.createClass({
               Bill Name: <input type="text" ref='name'/>
               Bill Amount: <input type="number" ref='total'/>
               Bill Due Date: <input type="date" ref='dueDate'/>
-              <button onClick={this.splitEvenly}>Split Evenly</button>
+              <button type='button' onClick={this.splitEvenly}>Split Evenly</button>
               <p> - OR - </p>
               <ul className='roommates'>
                 {userList}
@@ -222,9 +230,8 @@ var UserEntry = React.createClass({
   },
 
   setValue: function(id) {
-
-    console.log(this.refs[id].value);
     this.props.user.total = this.refs[id].value; 
+    console.log(this.props.user.total);
   },
 
   render: function() {
