@@ -50,7 +50,7 @@ var FinanceContainer = React.createClass({
       data: JSON.stringify(bill),
       contentType: 'application/json',
       success: function(data) {
-        console.log(data);
+        console.log('POST DATA', data);
         this.loadBills();
       }.bind(this)
     });
@@ -115,7 +115,7 @@ var FinanceContainer = React.createClass({
           <h4 className="text-center">History</h4>
           {historyList}
         </div>
-        <BillForm getUsers={this.getUsers} addPayment={this.addPayment} addBill={this.addBill} users={this.state.users}/>
+        <BillForm houseId={this.state.houseId} getUsers={this.getUsers} addPayment={this.addPayment} addBill={this.addBill} users={this.state.users}/>
       </div>
     )
   }
@@ -154,6 +154,7 @@ var BillForm = React.createClass({
       name: this.refs.name.value,
       dueDate: this.refs.dueDate.value
     };
+    console.log('BILL', bill); 
     //call addBill with this object. 
     this.props.addBill(bill); 
     //reset input fields
@@ -177,7 +178,9 @@ var BillForm = React.createClass({
         this.props.addPayment(payment);
       }
     }
+    //
     this.refs.billForm.reset();
+    //need to call get users again to reset the state
     this.props.getUsers(); 
   },
 
@@ -202,7 +205,7 @@ var BillForm = React.createClass({
               </ul>
             </div>
             <div className='submission'>
-              <button onClick={this.createPayments}>Submit Bill</button>
+              <button onClick={this.createBill}>Submit Bill</button>
             </div>
           </form>
         </div>
